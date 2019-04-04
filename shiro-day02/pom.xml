@@ -9,10 +9,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>shiro-day01</artifactId>
+    <artifactId>shiro-day02</artifactId>
     <packaging>war</packaging>
 
-    <name>shiro-day01 Maven Webapp</name>
+    <name>shiro-day02 Maven Webapp</name>
     <url>http://www.example.com</url>
 
     <properties>
