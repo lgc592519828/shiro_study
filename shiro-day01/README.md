@@ -5,7 +5,7 @@
 * 提供配置文件  
    web.xml 、spring-shiro-web、ehcache以及log等集成。
 * web.xml中filter-name 为什么一定要与spring-shiro-web中过滤器id一致呢?  
-   深入源码解析  
+   解读源码  
    解决方案写在自己的blog中  
    相关连接 ：
    
