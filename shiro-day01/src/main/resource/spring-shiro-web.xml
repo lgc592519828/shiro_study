@@ -7,14 +7,14 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!-- 缓存管理器 使用Ehcache实现 -->
-    <!--<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">-->
-        <!--<property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>-->
-    <!--</bean>-->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+    </bean>
 
     <!-- 凭证匹配器 -->
     <bean id="credentialsMatcher" class="cn.gcheng.security.credentials.DefaultCredentialsMatcher">
         <!-- 使用Spring构造器注入cacheManager -->
-        <!--<constructor-arg ref="cacheManager"/>-->
+        <constructor-arg ref="cacheManager"/>
         <!-- 指定散列算法名称 -->
         <property name="hashAlgorithmName" value="SHA1"/>
         <!-- 指定散列迭代的次数 -->
@@ -97,7 +97,7 @@
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="userRealm"/>
         <property name="sessionManager" ref="sessionManager"/>
-        <!--<property name="cacheManager" ref="cacheManager"/>-->
+        <property name="cacheManager" ref="cacheManager"/>
         <!-- 设置securityManager安全管理器的rememberMeManger -->
         <property name="rememberMeManager" ref="rememberMeManager"/>
     </bean>

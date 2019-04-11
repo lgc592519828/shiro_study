@@ -10,4 +10,7 @@ import org.apache.shiro.cache.ehcache.EhCacheManager;
 public class DefaultCredentialsMatcher extends HashedCredentialsMatcher {
 
 
+    public DefaultCredentialsMatcher(EhCacheManager ehCacheManager) {
+
+    }
 }

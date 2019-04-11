@@ -8,7 +8,10 @@
     http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- 配置注解扫描 -->
-    <context:component-scan base-package="cn.gcheng"/>
+    <context:component-scan base-package="cn.gcheng">
+        <!--使用Annotation自动注册Bean，解决事物失效问题：主容器中不扫描@Controller注解，在SpringMVC中只扫描@Controller注解-->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
 
     <!-- 加载数据库配置文件 -->
     <context:property-placeholder location="classpath*:jdbc.properties"/>
