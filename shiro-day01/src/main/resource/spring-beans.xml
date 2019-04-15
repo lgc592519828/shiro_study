@@ -39,7 +39,8 @@
     <!-- 启用mybatis的接口代理开发模式（接口和Xml配置必须同名，并且在同一目录下） -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="cn.gcheng.mapper"/>
-        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <!-- 注释掉：因为多数据源时会报CannotGetJdbcConnectionException错误 -->
+        <!--<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>-->
     </bean>
 
 </beans>
