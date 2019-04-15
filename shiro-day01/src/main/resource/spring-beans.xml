@@ -33,12 +33,12 @@
         <property name="configLocation" value="classpath:mybatis.xml"/>
 
         <!-- 扫描Mapper层的配置文件 -->
-        <property name="mapperLocations" value="classpath*:cn/gcheng/mapper/*.xml"/>
+        <property name="mapperLocations" value="classpath*:cn/gcheng/mapper/xml/*.xml"/>
     </bean>
 
     <!-- 启用mybatis的接口代理开发模式（接口和Xml配置必须同名，并且在同一目录下） -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="cn.tycoding.mapper"/>
+        <property name="basePackage" value="cn.gcheng.mapper"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 
