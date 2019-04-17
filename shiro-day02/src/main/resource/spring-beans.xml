@@ -8,7 +8,10 @@
     http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- 配置注解扫描 -->
-    <context:component-scan base-package="cn.gcheng"/>
+    <context:component-scan base-package="cn.gcheng">
+        <!--使用Annotation自动注册Bean，解决事物失效问题：主容器中不扫描@Controller注解，在SpringMVC中只扫描@Controller注解-->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
 
     <!-- 加载数据库配置文件 -->
     <context:property-placeholder location="classpath*:jdbc.properties"/>
@@ -29,13 +32,14 @@
         <!-- 加载mybatis的配置文件 -->
         <property name="configLocation" value="classpath:mybatis.xml"/>
 
-        <!-- 扫描Mapper层的配置文件 -->
-        <property name="mapperLocations" value="classpath*:cn/gcheng/mapper/*.xml"/>
+        <!-- 扫描Mapper层的xml文件 -->
+        <property name="mapperLocations" value="classpath*:cn/gcheng/mapper/xml/*.xml"/>
     </bean>
 
     <!-- 启用mybatis的接口代理开发模式（接口和Xml配置必须同名，并且在同一目录下） -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="cn.tycoding.mapper"/>
+        <property name="basePackage" value="cn.gcheng"/>
+        <!-- 不要使用sqlSessionFactory,因为多数据源时会报CannotGetJdbcConnectionException错误，此方式不会 -->
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 

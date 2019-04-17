@@ -1,11 +1,12 @@
 package cn.gcheng.security.realm;
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
+import cn.gcheng.entity.User;
+import cn.gcheng.service.UserService;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author gcheng.L
@@ -13,15 +14,36 @@ import org.apache.shiro.subject.PrincipalCollection;
  */
 public class UserRealm extends AuthorizingRealm {
 
+    @Autowired
+    private UserService userService;
+
     /**
-     * 身份验证
-     * @param token
+     * 身份验证， 模拟数据库访问
+     * @param authenToken
      * @return
      * @throws AuthenticationException
      */
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        return null;
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenToken) throws AuthenticationException {
+        UsernamePasswordToken token = (UsernamePasswordToken)authenToken;
+
+        // 安全数据源中获取User对象
+        User user = null;
+        try {
+            user = userService.findUserByLoginName(token.getUsername());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (user == null) {
+            // 帐号不存在
+            throw new UnknownAccountException();
+        }
+        if (user.getLocked()) {
+            // 账户被锁定
+            throw new IncorrectCredentialsException();
+        }
+        // 暂时不加salt，以及不使用自定义Matcher进行密码验证
+        return new SimpleAuthenticationInfo(user.getUsername(), user.getPassword(), getName());
     }
 
     /**

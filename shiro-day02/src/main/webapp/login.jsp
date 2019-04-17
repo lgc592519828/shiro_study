@@ -9,7 +9,7 @@
 
 <h3 class="text-center">登录</h3>
 <hr/>
-<form class="form-horizontal" action="login.do" role="form">
+<form class="form-horizontal" action="login.do" role="form" method="post">
     <div class="form-group">
         <label class="col-sm-5 control-label">username:</label>
         <div class="col-sm-2">
