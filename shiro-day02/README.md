@@ -17,8 +17,5 @@
    3. Authenticator可能会委托给相应的AuthenticationStrategy，进行ModularRealmAuthenticator中Realm身份验证，可以选择单realm和多realm认证。  
    4. Authenticator会把相应的token传入Realm，从Realm获取身份验证信息，如果没有返回/抛出异常表示身份验证失败了。此处可以配置多个Realm，将按照相应的顺序及策略进行访问。
    
-* shiro源码查看验证流程，以便于理解  
-   
-   
-   
+* shiro源码查看验证流程，以便于理解    
    
