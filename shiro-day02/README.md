@@ -13,7 +13,7 @@
 
 * 总结身份验证细节流程  
    1. 首先调用Subject.login(token)进行登录，其会自动委托给Security Manager。   
-   2. SecurityManager负责身份验证逻辑，它会委托给Authenticator认证器进行身份验证，可以自定义实现。   
+   2. SecurityManager负责身份验证逻辑，它会委托给Authenticator认证器进行身份验证，可以自定义实现。    
    3. Authenticator可能会委托给相应的AuthenticationStrategy，进行ModularRealmAuthenticator中Realm身份验证，可以选择单realm和多realm认证。  
    4. Authenticator会把相应的token传入Realm，从Realm获取身份验证信息，如果没有返回/抛出异常表示身份验证失败了。此处可以配置多个Realm，将按照相应的顺序及策略进行访问。
    
