@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <!-- Realm实现 -->
+    <bean id="userRealm" class="cn.gcheng.security.realm.UserRealm"/>
+
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="rememberMe"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="2592000"/><!-- 30天 -->
+    </bean>
+
+    <!-- rememberMe管理器 -->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <!-- cipherKey是加密rememberMe Cookie的密匙，默认AES算法 -->
+        <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}"/>
+        <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
+
+    <!-- 安全管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="userRealm"/>
+        <!-- 设置securityManager安全管理器的rememberMeManger -->
+        <property name="rememberMeManager" ref="rememberMeManager"/>
+    </bean>
+
+    <!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="org.apache.shiro.SecurityUtils.setSecurityManager"/>
+        <property name="arguments" ref="securityManager"/>
+    </bean>
+
+    <!-- 基于Form表单的身份验证过滤器 -->
+    <bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
+        <!-- 这两个字段，username和password要和表单中定义的username和password字段名称相同，可以更改，但是表单和XML要对应 -->
+        <property name="usernameParam" value="username"/>
+        <property name="passwordParam" value="password"/>
+        <property name="loginUrl" value="/login.jsp"/>
+        <!-- rememberMeParam是rememberMe请求参数名，请求参数是boolean类型，true表示记住我 -->
+        <property name="rememberMeParam" value="rememberMe"/>
+    </bean>
+
+    <!-- Shiro的Web过滤器
+        1.id 必须 和web.xml文件中配置的一致
+    -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!-- Shiro的安全管理器，所有关于安全的操作都会经过SecurityManager -->
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 系统认证提交地址，如果用户退出即session丢失就会访问这个页面 -->
+        <property name="loginUrl" value="/login.jsp"/>
+        <!-- 登录成功后重定向的地址，不建议配置 -->
+        <property name="successUrl" value="/index.do"/>
+        <!-- 权限验证失败跳转的页面，需要配合Spring的ExceptionHandler异常处理机制使用 -->
+        <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
+        <property name="filters">
+            <util:map>
+                <entry key="authc" value-ref="formAuthenticationFilter"/>
+            </util:map>
+        </property>
+        <!-- 自定义的过滤器链，从上向下执行，一般将`/**`放到最下面
+            1. anon  可以匿名访问
+            2. authc 表示访问该地址用户必须身份验证通过，即Subject.isAuthenticated() == true
+            3. user  表示身份通过或通过记住我通过的用户都能访问系统
+        -->
+        <property name="filterChainDefinitions">
+            <value>
+                <!-- 静态资源不拦截 -->
+                /static/** = anon
+                /lib/** = anon
+                /js/** = anon
+                <!-- 登录页面不拦截 -->
+                /login.jsp = anon
+                /login.do = anon
+                <!-- 验证码不拦截 -->
+                /generateCaptcha = anon
+                <!-- Shiro提供了退出登录的配置`logout`，会生成路径为`/logout`的请求地址，访问这个地址即会退出当前账户并清空缓存 -->
+                /logout = logout
+                /index.jsp = user
+                /authenticated.jsp = authc
+                <!-- `/**`表示所有请求，表示访问该地址的用户是身份验证通过或RememberMe登录的都可以 -->
+                /** = user
+            </value>
+        </property>
+    </bean>
+
+    <!-- Shiro生命周期处理器 , 可以自动的来调用spring IOC 容器中的shiro Bean的生命周期方法-->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+</beans>

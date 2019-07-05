@@ -29,18 +29,18 @@
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <!-- 注入数据库连接池 -->
         <property name="dataSource" ref="dataSource"/>
+        <!-- 扫描Mapper层的配置文件 -->
+        <property name="mapperLocations" value="classpath*:cn/gcheng/mapper/xml/*Mapper.xml"/>
         <!-- 加载mybatis的配置文件 -->
         <property name="configLocation" value="classpath:mybatis.xml"/>
 
-        <!-- 扫描Mapper层的配置文件 -->
-        <property name="mapperLocations" value="classpath*:cn/gcheng/mapper/xml/*.xml"/>
     </bean>
 
     <!-- 启用mybatis的接口代理开发模式（接口和Xml配置必须同名，并且在同一目录下） -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="cn.gcheng.mapper"/>
         <!-- 不要使用sqlSessionFactory,因为多数据源时会报CannotGetJdbcConnectionException错误,此方式不会出现这种情况-->
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <property name="basePackage" value="cn.gcheng.mapper"/>
     </bean>
 
 </beans>

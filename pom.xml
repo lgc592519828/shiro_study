@@ -11,6 +11,7 @@
     <modules>
         <module>shiro-day01</module>
         <module>shiro-day02</module>
+        <module>shiro-day03</module>
     </modules>
 
 
