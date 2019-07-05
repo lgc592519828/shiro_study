@@ -9,5 +9,7 @@
 ### day02  
    * 表单身份验证流程，进入shiro源码解析查看流程,自定义realm验证身份  
    相关连接：  
-   
+    认识Shiro，了解搭建框架中配置文件中每个配置的意义 ：
+    https://blog.csdn.net/lgc592519828/article/details/89643045
+    
        
